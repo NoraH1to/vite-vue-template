@@ -1,5 +1,6 @@
 import { Service } from '@@/types/api';
 import axios from 'axios';
+import toast from '@/utils/toast';
 
 const getCancel = () => axios.CancelToken.source();
 
@@ -16,39 +17,35 @@ $service.interceptors.request.use(
     return config;
   },
   (error) => {
+    toast.error(error.message || error);
     return Promise.reject(error);
   },
 );
 
-// service.defaults.baseURL = BASE_URL;
-
 // 响应拦截
 $service.interceptors.response.use(
   (response) => {
-    if (response.status < 200 || response.status >= 300) {
-      // toast.error(response.statusText);
-      return Promise.reject(response.data);
+    const {
+      status,
+      data,
+      statusText,
+      config: { msg, errMsg, dontError },
+    } = response;
+    if (status >= 200 && status < 300) {
+      msg && toast.success(msg);
+      return Promise.resolve(data);
     }
-    if (response.data.code) {
-      if (response.data.code >= 200 && response.data.code < 300) {
-        // 有 msg 配置的提醒成功
-        // response.config.msg && toast.success(response.config.msg);
-        return Promise.resolve(response.data);
-      } else if (response.data.code == 403) {
-        // toast.error(response.data.msg);
-      } else {
-        // toast.error(response.data.msg);
-      }
-    }
-    return Promise.reject(response.data);
+    !dontError && toast.error(errMsg || statusText);
+    return Promise.reject(response);
   },
   (error) => {
-    // toast.error(error.message);
+    toast.error(error.message || error);
     return Promise.reject(error);
   },
 );
 
 export const service: Service = (config) => {
+  // 每个请求都会返回撤销方法
   const cancel = getCancel();
   return {
     request: () =>

@@ -7,12 +7,12 @@ declare namespace ApiInterface {
   /**
    * @description 请求配置
    */
-  type RequestConfig = AxiosRequestConfig;
+  type RequestConfig<R> = R;
 
   /**
    * @description 请求方法
    */
-  type RequestType<R> = (config: RequestConfig) => Promise<R>;
+  type RequestType<C, R> = (config: RequestConfig<C>) => Promise<R>;
 
   /**
    * @description 取消请求方法
@@ -28,14 +28,14 @@ declare namespace ApiInterface {
    * @description 请求服务
    */
   interface Service {
-    (config: RequestConfig): ServiceReturn;
+    (config: RequestConfig<AxiosRequestConfig>): ServiceReturn;
   }
 
   /**
    * @description 请求服务内容
    */
   interface ServiceReturn {
-    request: RequestType<AxiosResponse<any>>;
+    request: RequestType<AxiosRequestConfig, AxiosResponse<any>>;
     cancel: RequestCancelType<CancelTokenSource['cancel']>;
   }
 }
