@@ -1,8 +1,6 @@
-import { POST } from './post';
-import $service, { service } from './service';
+import { POST as _POST } from './post';
+import $service, { service as _service } from './service';
 
-export default {
-  $service,
-  service,
-  POST,
-};
+export const POST = _POST;
+export const service = _service;
+export default $service;

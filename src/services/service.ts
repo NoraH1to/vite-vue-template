@@ -1,6 +1,5 @@
-import { Service } from '@@/types/api';
-import axios from 'axios';
-import toast from '@/utils/toast';
+import { ServiceProp, ServiceReturn } from '@@/types/api';
+import axios, { AxiosResponse } from 'axios';
 
 const getCancel = () => axios.CancelToken.source();
 
@@ -17,7 +16,6 @@ $service.interceptors.request.use(
     return config;
   },
   (error) => {
-    toast.error(error.message || error);
     return Promise.reject(error);
   },
 );
@@ -25,31 +23,21 @@ $service.interceptors.request.use(
 // 响应拦截
 $service.interceptors.response.use(
   (response) => {
-    const {
-      status,
-      data,
-      statusText,
-      config: { msg, errMsg, dontError },
-    } = response;
-    if (status >= 200 && status < 300) {
-      msg && toast.success(msg);
-      return Promise.resolve(data);
-    }
-    !dontError && toast.error(errMsg || statusText);
+    const { status, data, statusText } = response;
+    if (status >= 200 && status < 300) return Promise.resolve(response);
     return Promise.reject(response);
   },
   (error) => {
-    toast.error(error.message || error);
     return Promise.reject(error);
   },
 );
 
-export const service: Service = (config) => {
+export const service = <R = any>(config: ServiceProp): ServiceReturn<R> => {
   // 每个请求都会返回撤销方法
   const cancel = getCancel();
   return {
     request: () =>
-      $service.request({
+      $service.request<any, AxiosResponse<R>>({
         ...config,
         cancelToken: cancel.token,
       }),

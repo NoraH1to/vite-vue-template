@@ -1,11 +1,14 @@
 <template>
   <h1>{{ msg }}</h1>
   <el-button @click="count++"> count is: {{ count }} </el-button>
+  <el-button @click="loading = true"> loading: {{ loading }} </el-button>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import { ElButton } from 'element-plus';
+import { useApi } from '@/hooks';
+import { example, ExampleParams, ExampleReturn } from '@/services/api/example';
 export default defineComponent({
   components: {
     ElButton,
@@ -19,7 +22,14 @@ export default defineComponent({
   },
   setup: () => {
     const count = ref(0);
-    return { count };
+    const { loading, data, reactiveParams } = useApi<
+      ExampleParams,
+      ExampleReturn
+    >(example, {
+      p1: '',
+      p2: 123,
+    });
+    return { count, loading, data, reactiveParams };
   },
 });
 </script>
