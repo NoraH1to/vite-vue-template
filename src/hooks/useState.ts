@@ -1,9 +1,9 @@
-import { Ref, ref, UnwrapRef } from 'vue';
+import { Ref, ref } from 'vue';
 
-export type UseStateReturn<T> = [Ref<UnwrapRef<T>>, any];
+export type UseStateReturn<T> = [Ref<T>, any];
 
 export default <T>(target: T): UseStateReturn<T> => {
-  const value = ref<T>(target);
+  const value = ref<T>(target) as Ref<T>;
   const setValue = (newVal: any) => {
     value.value = newVal;
   };

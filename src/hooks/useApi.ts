@@ -1,22 +1,24 @@
 import { ServiceReturn } from '@@/types/api';
-import { Ref, UnwrapRef, watch } from 'vue';
+import { Ref, UnwrapRef, watch, onBeforeUnmount } from 'vue';
 import toast from '@/utils/toast';
 import useState from './useState';
 
-type UseApiReturn<P, R> = {
+export type UseApiReturn<P, R> = {
   loading: Ref<boolean>;
   setLoading: (loading: boolean) => void;
-  reactiveParams: Ref<UnwrapRef<P> | undefined>;
-  data: Ref<UnwrapRef<R> | undefined>;
+  reactiveParams: Ref<P | undefined>;
+  data: Ref<R | undefined>;
+};
+export type Api<P, R> = (prop: P) => ServiceReturn<R>;
+export type Msg = {
+  successMsg?: string;
+  errorMsg?: string;
 };
 
 export default <P = undefined, R = any>(
-  api: (prop: P) => ServiceReturn<R>,
+  api: Api<P, R>,
   params: P,
-  msg: {
-    successMsg?: string;
-    errorMsg?: string;
-  } = {},
+  msg: Msg = {},
 ): UseApiReturn<P, R> => {
   const { successMsg, errorMsg } = msg;
 
@@ -37,8 +39,12 @@ export default <P = undefined, R = any>(
         .catch((err) => {
           errorMsg && toast.error(errorMsg);
         })
-        .finally(() => setLoading(true)),
+        .finally(() => setLoading(false)),
   );
+
+  onBeforeUnmount(() => {
+    cancel();
+  });
 
   return { loading, setLoading, reactiveParams, data };
 };
