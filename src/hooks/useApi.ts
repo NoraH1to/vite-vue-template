@@ -11,9 +11,12 @@ type UseApiReturn<P, R> = {
 export default <P = undefined, R = any>(
   api: (prop: P) => ServiceReturn<R>,
   params: P,
-  successMsg?: string,
-  errorMsg?: string,
+  msg: {
+    successMsg?: string;
+    errorMsg?: string;
+  } = {},
 ): UseApiReturn<P, R> => {
+  const { successMsg, errorMsg } = msg;
   let loading = ref(false);
   let reactiveParams = ref(params);
   let data = ref<R | undefined>();

@@ -1,4 +1,5 @@
 import { ElMessage } from 'element-plus';
+import 'element-plus/packages/theme-chalk/src/icon.scss';
 
 interface ToastInterface {
   success?: (msg: string) => void;

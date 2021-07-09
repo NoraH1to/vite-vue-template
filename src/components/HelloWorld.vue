@@ -25,10 +25,16 @@ export default defineComponent({
     const { loading, data, reactiveParams } = useApi<
       ExampleParams,
       ExampleReturn
-    >(example, {
-      p1: '',
-      p2: 123,
-    });
+    >(
+      example,
+      {
+        p1: '',
+        p2: 123,
+      },
+      {
+        errorMsg: '失败',
+      },
+    );
     return { count, loading, data, reactiveParams };
   },
 });
