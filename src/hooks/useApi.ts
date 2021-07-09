@@ -1,11 +1,13 @@
 import { ServiceReturn } from '@@/types/api';
-import { Ref, ref, UnwrapRef, watch } from 'vue';
+import { Ref, UnwrapRef, watch } from 'vue';
 import toast from '@/utils/toast';
+import useState from './useState';
 
 type UseApiReturn<P, R> = {
   loading: Ref<boolean>;
+  setLoading: (loading: boolean) => void;
   reactiveParams: Ref<UnwrapRef<P> | undefined>;
-  data: Ref<R | undefined>;
+  data: Ref<UnwrapRef<R> | undefined>;
 };
 
 export default <P = undefined, R = any>(
@@ -17,11 +19,12 @@ export default <P = undefined, R = any>(
   } = {},
 ): UseApiReturn<P, R> => {
   const { successMsg, errorMsg } = msg;
-  let loading = ref(false);
-  let reactiveParams = ref(params);
-  let data = ref<R | undefined>();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [reactiveParams] = useState<P>(params);
+  const [data, setData] = useState<R | undefined>(undefined);
+
   const { request, cancel } = api(params);
-  // loading 改变且为 true 的时候，请求数据
   watch(
     loading,
     (val) =>
@@ -29,12 +32,13 @@ export default <P = undefined, R = any>(
       request()
         .then((res) => {
           successMsg && toast.success(successMsg);
-          data.value = res.data;
+          setData(res.data);
         })
         .catch((err) => {
           errorMsg && toast.error(errorMsg);
         })
-        .finally(() => (loading.value = false)),
+        .finally(() => setLoading(true)),
   );
-  return { loading, reactiveParams, data };
+
+  return { loading, setLoading, reactiveParams, data };
 };
