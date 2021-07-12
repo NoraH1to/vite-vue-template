@@ -1,5 +1,3 @@
-<template></template>
-
 <script lang="tsx">
 import { defineComponent } from 'vue';
 import HelloWorld from '@/components/HelloWorld.vue';

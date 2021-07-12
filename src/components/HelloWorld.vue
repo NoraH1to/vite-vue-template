@@ -33,7 +33,7 @@ export default defineComponent({
     });
     return () => (
       <>
-        <h1>{msg}</h1>
+        <h1>{msg.value}</h1>
         <el-button onclick={() => count.value++}>
           count is: {count.value}
         </el-button>
