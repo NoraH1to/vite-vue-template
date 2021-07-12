@@ -1,25 +1,25 @@
+<template>
+  <img alt="Vue logo" src="@/assets/logo.png" />
+  <HelloWorld :msg="title" :params="params" />
+</template>
+
 <script lang="tsx">
 import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue';
-import logo from '@/assets/logo.png';
+import HelloWorld from '@/components/HelloWorld';
 
 export default defineComponent({
   name: 'App',
   components: {
     HelloWorld,
   },
-  setup: () => {
-    const title = import.meta.env.VITE_TITLE;
-    const params = {
-      hello: 'hello',
-      world: 'world',
+  data() {
+    return {
+      title: import.meta.env.VITE_TITLE,
+      params: {
+        hello: 'hello',
+        world: 'world',
+      },
     };
-    return () => (
-      <>
-        <img alt="Vue logo" src={logo} />
-        <HelloWorld msg={title} params={params} />
-      </>
-    );
   },
 });
 </script>
