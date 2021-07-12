@@ -3,7 +3,9 @@ import { Ref, isRef, isReactive, watch, onBeforeUnmount } from 'vue';
 import toast from '@/utils/toast';
 import useState from './useState';
 
-export type Api<P, R> = (prop?: P) => ServiceReturn<R>;
+export interface Api<P, R> {
+  (prop: P): ServiceReturn<R>;
+}
 export type Msg = {
   successMsg?: string;
   errorMsg?: string;
@@ -11,13 +13,13 @@ export type Msg = {
 
 export type UseApiProp<P, R> = {
   api: Api<P, R>;
-  params?: P | Ref<P>;
+  params: P | Ref<P>;
   msg: Msg;
 };
 export type UseApiReturn<P, R> = {
   loading: Ref<boolean>;
   setLoading: (loading: boolean) => void;
-  reactiveParams: Ref<P | undefined>;
+  reactiveParams: Ref<P>;
   data: Ref<R | undefined>;
 };
 
@@ -31,7 +33,7 @@ export default <P = undefined, R = undefined>({
   const [loading, setLoading] = useState<boolean>(false);
   let reactiveParams;
   if (isRef(params)) reactiveParams = params;
-  else [reactiveParams] = useState<P | undefined>(params);
+  else [reactiveParams] = useState<P>(params);
   const [data, setData] = useState<R | undefined>(undefined);
 
   const { request, cancel } = api(reactiveParams.value);
