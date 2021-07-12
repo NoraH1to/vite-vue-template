@@ -1,13 +1,13 @@
 import { POST } from '@/services';
 
 export interface ExampleParams {
-  p1: string;
-  p2?: number;
+  hello: string;
+  world?: string;
 }
 export interface ExampleReturn {
   data: {
-    a: string;
-    b?: number;
+    hello: string;
+    world?: string;
   };
 }
 export const example = (data: ExampleParams) =>

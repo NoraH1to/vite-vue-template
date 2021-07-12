@@ -1,41 +1,33 @@
-<template>
-  <h1>{{ msg }}</h1>
-  <el-button @click="count++"> count is: {{ count }} </el-button>
-  <el-button @click="loading = true"> loading: {{ loading }} </el-button>
-</template>
-
-<script lang="ts">
-import { ref, defineComponent } from 'vue';
+<script lang="tsx">
+import { ref, defineComponent, toRefs } from 'vue';
 import { ElButton } from 'element-plus';
 import { useApi } from '@/hooks';
 import { example, ExampleParams, ExampleReturn } from '@/services/api/example';
-export default defineComponent({
+export default defineComponent<{ msg: string; params: ExampleParams }>({
   components: {
     ElButton,
   },
   name: 'HelloWorld',
-  props: {
-    msg: {
-      type: String,
-      required: true,
-    },
-  },
-  setup: () => {
-    const count = ref(0);
-    const { loading, data, reactiveParams } = useApi<
+  setup: (props) => {
+    const { params, msg } = toRefs(props);
+    let count = ref(0);
+    let { loading, data, reactiveParams } = useApi<
       ExampleParams,
       ExampleReturn
-    >(
-      example,
-      {
-        p1: '',
-        p2: 123,
-      },
-      {
-        errorMsg: '失败',
-      },
+    >(example, params, {
+      errorMsg: '失败',
+    });
+    return () => (
+      <>
+        <h1>{msg}</h1>
+        <el-button onclick={() => count.value++}>
+          count is: {count.value}
+        </el-button>
+        <el-button onclick={() => (loading.value = true)}>
+          {`loading: ${loading.value}`}
+        </el-button>
+      </>
     );
-    return { count, loading, data, reactiveParams };
   },
 });
 </script>

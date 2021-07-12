@@ -1,6 +1,6 @@
 <template>
   <img alt="Vue logo" src="@/assets/logo.png" />
-  <HelloWorld :msg="title" />
+  <HelloWorld :msg="title" :params="params" />
 </template>
 
 <script lang="ts">
@@ -15,6 +15,10 @@ export default defineComponent({
   data() {
     return {
       title: import.meta.env.VITE_TITLE,
+      params: {
+        p1: 'p1',
+        p2: 2,
+      },
     };
   },
 });

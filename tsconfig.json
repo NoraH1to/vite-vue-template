@@ -7,6 +7,9 @@
     "jsx": "preserve",
     "sourceMap": true,
     "resolveJsonModule": true,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
     "baseUrl": "./",
@@ -29,5 +32,6 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "types/**/*.d.ts"
-  ]
+  ],
+  "exclude": ["node_modules", "dist", "**/*.js"]
 }

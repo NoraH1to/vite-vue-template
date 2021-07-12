@@ -1,6 +1,3 @@
-import { ElMessage } from 'element-plus';
-import 'element-plus/packages/theme-chalk/src/icon.scss';
-
 interface ToastInterface {
   success?: (msg: string) => void;
   warning?: (msg: string) => void;
@@ -8,7 +5,7 @@ interface ToastInterface {
   info?: (msg: string) => void;
 }
 
-class Toast implements ToastInterface {
+export default class Toast implements ToastInterface {
   instance: ToastInterface = {};
   constructor(instance: ToastInterface) {
     this.instance = instance;
@@ -26,18 +23,3 @@ class Toast implements ToastInterface {
     this.instance.info?.(msg);
   }
 }
-
-export default new Toast({
-  success(msg) {
-    ElMessage.success(msg);
-  },
-  warning(msg) {
-    ElMessage.warning(msg);
-  },
-  error(msg) {
-    ElMessage.error(msg);
-  },
-  info(msg) {
-    ElMessage(msg);
-  },
-});
