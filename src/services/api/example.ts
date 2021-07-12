@@ -10,8 +10,7 @@ export interface ExampleReturn {
     world?: string;
   };
 }
-export const example = (data: ExampleParams) =>
-  POST<ExampleParams, ExampleReturn>({
+export const example = () =>
+  POST<ExampleReturn>({
     url: 'example.com',
-    data,
   });

@@ -1,11 +1,21 @@
 <script lang="tsx">
-import { ref, defineComponent, toRefs } from 'vue';
+import { ref, defineComponent, toRefs, PropType } from 'vue';
 import { ElButton } from 'element-plus';
 import { useApi } from '@/hooks';
 import { example, ExampleParams, ExampleReturn } from '@/services/api/example';
-export default defineComponent<{ msg: string; params: ExampleParams }>({
+export default defineComponent({
   components: {
     ElButton,
+  },
+  props: {
+    msg: {
+      type: String,
+      required: true,
+    },
+    params: {
+      type: Object as PropType<ExampleParams>,
+      required: true,
+    },
   },
   name: 'HelloWorld',
   setup: (props) => {
@@ -14,8 +24,12 @@ export default defineComponent<{ msg: string; params: ExampleParams }>({
     let { loading, data, reactiveParams } = useApi<
       ExampleParams,
       ExampleReturn
-    >(example, params, {
-      errorMsg: '失败',
+    >({
+      api: example,
+      params,
+      msg: {
+        errorMsg: '失败',
+      },
     });
     return () => (
       <>

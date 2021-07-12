@@ -35,15 +35,4 @@ declare namespace ApiInterface {
     request: RequestType<AxiosResponse<R>>;
     cancel: RequestCancelType<CancelTokenSource['cancel']>;
   }
-
-  /**
-   * @description POST 接口
-   */
-  interface POSTProps<P> {
-    url: string;
-    data: P;
-    json?: boolean;
-    config?: AxiosRequestConfig;
-  }
-  type POSTReturn<R = any> = ServiceReturn<R>;
 }
