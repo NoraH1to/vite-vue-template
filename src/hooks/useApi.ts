@@ -33,7 +33,7 @@ export default <P = undefined, R = undefined>({
 }: UseApiProp<P, R>): UseApiReturn<P, R> => {
   const [reactiveMsg, setReactiveMsg] = useState(msg);
   const [loading, setLoading] = useState<boolean>(false);
-  let [reactiveParams, setReactiveParams] = useState<P>(params);
+  const [reactiveParams, setReactiveParams] = useState<P>(params);
   const [data, setData] = useState<R | undefined>(undefined);
 
   const { request, cancel } = api(reactiveParams.value);
