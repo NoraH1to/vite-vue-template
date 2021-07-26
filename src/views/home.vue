@@ -1,6 +1,6 @@
 <template>
   <img alt="Vue logo" src="@/assets/logo.png" />
-  <HelloWorld :msg="title" :params="params" />
+  <HelloWorld :title="title" :params="params" />
 </template>
 
 <script lang="tsx">
