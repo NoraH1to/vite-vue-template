@@ -1,7 +1,9 @@
 import { ServiceReturn } from '@@/types/api';
 import { Ref, watch, onBeforeUnmount } from 'vue';
 import toast from '@/utils/toast';
+import { andCatch, andFinally } from '@/utils/ramda';
 import useState from './useState';
+import { andThen, prop, compose } from 'ramda';
 
 export interface Api<P, R> {
   (prop: P): ServiceReturn<R>;
@@ -11,6 +13,8 @@ export type Msg = {
   errorMsg?: string;
 };
 
+export type DataType<R> = R | undefined;
+export type ErrorType<R> = ReturnType<ServiceReturn<R>['request']> | undefined;
 export type UseApiProp<P, R> = {
   api: Api<P, R>;
   params: P;
@@ -21,7 +25,8 @@ export type UseApiReturn<P, R> = {
   setLoading: (loading: boolean) => void;
   params: Ref<P>;
   setParams: (params: P) => void;
-  data: Ref<R | undefined>;
+  data: Ref<DataType<R>>;
+  error: Ref<ErrorType<R>>;
   msg: Ref<Msg>;
   setMsg: (msg: Msg) => void;
 };
@@ -34,24 +39,28 @@ export default <P = undefined, R = undefined>({
   const [reactiveMsg, setReactiveMsg] = useState(msg);
   const [loading, setLoading] = useState<boolean>(false);
   const [reactiveParams, setReactiveParams] = useState<P>(params);
-  const [data, setData] = useState<R | undefined>(undefined);
+  const [data, setData] = useState<DataType<R>>(undefined);
+  const [error, setError] = useState<ErrorType<R>>(undefined);
 
   const { request, cancel } = api(reactiveParams.value);
-  watch(
-    loading,
-    (val) =>
-      val &&
-      request()
-        .then((res) => {
-          reactiveMsg.value.successMsg &&
-            toast.success(reactiveMsg.value.successMsg);
-          setData(res.data);
-        })
-        .catch((err) => {
-          reactiveMsg.value.errorMsg && toast.error(reactiveMsg.value.errorMsg);
-        })
-        .finally(() => setLoading(false)),
-  );
+
+  const getData = prop('data');
+  const setUnLoading = () => setLoading(false);
+  const toastSuccessMsg = () => toast.success(reactiveMsg.value.successMsg);
+  const toastErrorMsg = () => toast.error(reactiveMsg.value.errorMsg);
+
+  watch(loading, (val) => {
+    if (val) {
+      const requestSteps: [any, any, any, any] = [
+        andFinally(setUnLoading),
+        andCatch(compose(toastErrorMsg, setError)),
+        andThen(compose(toastSuccessMsg, setData, getData)),
+        request,
+      ];
+      const _request: any = compose(...requestSteps);
+      _request();
+    }
+  });
 
   onBeforeUnmount(() => {
     cancel();
@@ -63,6 +72,7 @@ export default <P = undefined, R = undefined>({
     params: reactiveParams,
     setParams: setReactiveParams,
     data,
+    error,
     msg: reactiveMsg,
     setMsg: setReactiveMsg,
   };
