@@ -1,4 +1,11 @@
-import { ref, defineComponent, toRefs, PropType, computed } from 'vue';
+import {
+  ref,
+  defineComponent,
+  toRefs,
+  PropType,
+  computed,
+  DefineComponent,
+} from 'vue';
 import { ElDivider, ElButton, ElInput } from 'element-plus';
 import { useApi, useFocus } from '@/hooks';
 import { example, ExampleParams, ExampleReturn } from '@/services/api/example';
@@ -18,17 +25,20 @@ export default defineComponent({
       type: Object as PropType<ExampleParams>,
       required: true,
     },
+    propComp: {
+      type: Object as PropType<DefineComponent<() => JSX.Element>>,
+      required: true,
+    },
   },
   name: 'HelloWorld',
-  setup: (props) => {
+  setup: (props, { slots }) => {
+    const DefaultSlot = slots.default;
     const { title, params } = toRefs(props);
-
+    const { propComp } = props;
     let count = ref(0);
-    const CountComponent = (
-      <el-button onclick={() => count.value++}>
-        count is: {count.value}
-      </el-button>
-    );
+    const CountComponent = defineComponent(() => () => (
+      <ElButton onclick={() => count.value++}>count is: {count.value}</ElButton>
+    ));
 
     let {
       loading,
@@ -48,26 +58,26 @@ export default defineComponent({
       () =>
         `${data.value?.data.hello || ''} ${data.value?.data.world || ''}` || '',
     );
-    const RequestComponent = (
+    const RequestComponent = defineComponent(() => () => (
       <>
-        <el-input
+        <ElInput
           v-model={msg.value.successMsg}
           style={{ width: '180px' }}
           placeholder="成功提示信息"
         />
-        <el-input
+        <ElInput
           v-model={msg.value.errorMsg}
           style={{ width: '180px', marginLeft: '10px' }}
           placeholder="错误提示信息"
         />
-        <el-button
+        <ElButton
           style={{ marginLeft: '10px' }}
           onclick={() => (loading.value = true)}
           loading={loading.value}>
           {`loading: ${loading.value}`}
-        </el-button>
+        </ElButton>
       </>
-    );
+    ));
 
     let focusNode = ref();
     const { focus, blur, isFocused } = useFocus({
@@ -75,38 +85,46 @@ export default defineComponent({
       focused: true,
     });
     const isFocusedStr = computed(() => isFocused.value.toString?.() || '');
-    const FocusComponent = (
+    const FocusComponent = defineComponent(() => () => (
       <>
-        <el-input
+        <ElInput
           v-model={isFocusedStr.value}
           style={{ width: '180px' }}
           ref={focusNode}
         />
-        <el-button
+        <ElButton
           style={{ marginLeft: '10px' }}
           onclick={() => focus()}
           type="primary">
           focus
-        </el-button>
-        <el-button style={{ marginLeft: '10px' }} onclick={() => blur()}>
+        </ElButton>
+        <ElButton style={{ marginLeft: '10px' }} onclick={() => blur()}>
           blur
-        </el-button>
+        </ElButton>
       </>
-    );
+    ));
 
     return () => (
       <>
         <h1>{title.value}</h1>
 
-        {CountComponent}
+        {slots.default?.({ msg: msg.value })}
+        {/* 这种写法类型提示有问题 */}
+        {/* <DefaultSlot msg={msg.value} /> */}
+
+        <propComp msg={msg.value} />
 
         <el-divider>{dataStr.value}</el-divider>
 
-        {RequestComponent}
+        <CountComponent />
 
         <el-divider>{dataStr.value}</el-divider>
 
-        {FocusComponent}
+        <RequestComponent />
+
+        <el-divider>{dataStr.value}</el-divider>
+
+        <FocusComponent />
       </>
     );
   },
