@@ -7,11 +7,13 @@ import { mergeConfig } from 'vite';
 import commonConfig from './vite.config.common';
 import devConfig from './vite.config.dev';
 
+import { MODE_DEV } from './constant';
+
 export default ({ mode }) => {
   let targetConfig = {};
   // 注入对应模式的配置
   switch (mode) {
-    case 'dev':
+    case MODE_DEV:
       targetConfig = devConfig;
       break;
   }
