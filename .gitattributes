@@ -1,0 +1,16 @@
+*.vue text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+.env.* text eol=lf
+.env text eol=lf
+
+# ignore resource file
+*.git -text
+*.png -text
+*.jpeg -text
+*.jpg -text
+*.svg -text
+*.ico -text
