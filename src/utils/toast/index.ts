@@ -1,6 +1,5 @@
 import { ElMessage } from 'element-plus';
 import { curry } from 'ramda';
-import 'element-plus/packages/theme-chalk/src/icon.scss';
 import { IMessageOptions } from 'element-plus/lib/el-message/src/types';
 
 interface ToastInterface {

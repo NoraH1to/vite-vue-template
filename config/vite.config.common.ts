@@ -25,6 +25,7 @@ export default defineConfig({
           libraryName: 'element-plus',
           esModule: true,
           ensureStyleFile: true,
+          base: 'element-plus/lib/theme-chalk/base.css',
           resolveStyle: (name) => {
             name = name.slice(3);
             return `element-plus/packages/theme-chalk/src/${name}.scss`;
