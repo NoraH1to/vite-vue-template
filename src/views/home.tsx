@@ -15,14 +15,11 @@ export default defineComponent({
     };
 
     /**
-     * defineComponent 传入一个函数时，该函数其实是一个 setup 函数
-     * 这样定义的时候没有指定 props，所以只能从 attrs 中取传参，没有类型提示
+     * 函数式组件 +1
      */
-    const propComp = defineComponent((_, { attrs }) => {
-      return () => (
-        <ElInput style={{ width: '180px' }} v-model={attrs?.msg?.errorMsg} />
-      );
-    });
+    const propComp = ({ msg }: { msg: Msg }) => {
+      return <ElInput style={{ width: '180px' }} v-model={msg.errorMsg} />;
+    };
 
     const title = import.meta.env.VITE_TITLE;
     const params = {

@@ -9,6 +9,7 @@ import {
 import { ElDivider, ElButton, ElInput } from 'element-plus';
 import { useApi, useFocus } from '@/hooks';
 import { example, ExampleParams, ExampleReturn } from '@/services/api/example';
+import { Msg } from '@/hooks/useApi';
 
 export default defineComponent({
   components: {
@@ -26,7 +27,7 @@ export default defineComponent({
       required: true,
     },
     propComp: {
-      type: Object as PropType<DefineComponent<() => JSX.Element>>,
+      type: Object as PropType<({ msg }: { msg: Msg }) => JSX.Element>,
       required: true,
     },
   },
@@ -109,8 +110,6 @@ export default defineComponent({
         <h1>{title.value}</h1>
 
         {slots.default?.({ msg: msg.value })}
-        {/* 这种写法类型提示有问题 */}
-        {/* <DefaultSlot msg={msg.value} /> */}
 
         <propComp msg={msg.value} />
 
