@@ -109,8 +109,6 @@ export default defineComponent({
         <h1>{title.value}</h1>
 
         {slots.default?.({ msg: msg.value })}
-        {/* 这种写法类型提示有问题 */}
-        {/* <DefaultSlot msg={msg.value} /> */}
 
         <propComp msg={msg.value} />
 
