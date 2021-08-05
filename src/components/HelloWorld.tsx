@@ -26,7 +26,7 @@ export default defineComponent({
       required: true,
     },
     propComp: {
-      type: Object as PropType<({ msg }: { msg: Msg }) => JSX.Element>,
+      type: Function as PropType<({ msg }: { msg: Msg }) => JSX.Element>,
       required: true,
     },
   },

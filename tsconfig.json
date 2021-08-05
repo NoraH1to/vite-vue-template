@@ -12,7 +12,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"],
-    "baseUrl": "./",
+    "skipLibCheck": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
       "@@/*": ["*"]
@@ -33,5 +34,5 @@
     "src/**/*.vue",
     "types/**/*.d.ts"
   ],
-  "exclude": ["node_modules", "dist", "**/*.js"]
+  "exclude": ["node_modules", "dist"]
 }
