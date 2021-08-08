@@ -1,12 +1,6 @@
-import {
-  ref,
-  defineComponent,
-  toRefs,
-  PropType,
-  computed,
-} from 'vue';
+import { ref, defineComponent, toRefs, PropType, computed, watch } from 'vue';
 import { ElDivider, ElButton, ElInput } from 'element-plus';
-import { useApi, useFocus } from '@/hooks';
+import { useApi, useFocus, useHistory, useState } from '@/hooks';
 import { example, ExampleParams, ExampleReturn } from '@/services/api/example';
 import { Msg } from '@/hooks/useApi';
 
@@ -35,7 +29,7 @@ export default defineComponent({
     const DefaultSlot = slots.default;
     const { title, params } = toRefs(props);
     const { propComp } = props;
-    let count = ref(0);
+    let [count] = useState(0);
     const CountComponent = defineComponent(() => () => (
       <ElButton onclick={() => count.value++}>count is: {count.value}</ElButton>
     ));
@@ -104,6 +98,13 @@ export default defineComponent({
       </>
     ));
 
+    const {
+      value: historyValue,
+      setValue,
+      goBack,
+      goForward,
+    } = useHistory<string>('1');
+
     return () => (
       <>
         <h1>{title.value}</h1>
@@ -123,6 +124,14 @@ export default defineComponent({
         <el-divider>{dataStr.value}</el-divider>
 
         <FocusComponent />
+
+        <el-divider>{dataStr.value}</el-divider>
+
+        <ElInput style={{ width: '180px' }} v-model={historyValue.value} />
+        <ElButton style={{ marginLeft: '10px' }} onClick={goBack}>
+          goBack
+        </ElButton>
+        <ElButton onClick={goForward}>goForward</ElButton>
       </>
     );
   },
