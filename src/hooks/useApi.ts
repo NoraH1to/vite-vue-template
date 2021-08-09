@@ -54,7 +54,7 @@ export default <P = undefined, R = undefined>({
       const requestSteps: [any, any, any, any] = [
         andFinally(setUnLoading),
         andCatch(compose(toastErrorMsg, setError)),
-        andThen(compose(toastSuccessMsg, setData, getData)),
+        andThen<any, any>(compose(toastSuccessMsg, setData, getData)),
         request,
       ];
       const _request: any = compose(...requestSteps);

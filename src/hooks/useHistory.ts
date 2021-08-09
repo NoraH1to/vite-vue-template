@@ -1,4 +1,4 @@
-import { Ref, ref, watch } from 'vue';
+import { watch } from 'vue';
 import useState, { UseStateReturn } from './useState';
 
 export interface UseHistoryReturn<T> {
