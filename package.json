@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite serve --config config/vite.config.ts --mode dev",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vue-tsc --noEmit && vite build --config config/vite.config.ts --mode prod",
     "serve": "vite preview"
   },
   "dependencies": {
